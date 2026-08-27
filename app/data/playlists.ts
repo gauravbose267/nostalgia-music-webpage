@@ -1,43 +1,46 @@
 ﻿import { Playlist } from '../types/music';
 
 /**
- * Playlists Configuration
- * Adding a song is a single-line dictionary entry:
- * { id: "track-slug", title: "Song Name", artist: "Artist", film: "Album/Film", year: 1998, duration: 180, videoId: "YOUTUBE_ID" },
+ * Zubeen Garg Playlists
+ * Streams from official/embeddable YouTube uploads with one-line track definitions:
+ * { id: "slug", title: "Song Name", artist: "Artist", film: "Album/Film", year: 1998, duration: 180, videoId: "YOUTUBE_ID" },
  */
 export const PLAYLISTS: Playlist[] = [
   {
-    id: 'panbazar-evenings',
-    name: 'Panbazar Evenings',
-    description: 'Golden hour cassette tunes, street buzz, and acoustic nostalgia',
-    tag: 'Adda & Acoustic',
+    id: 'zubeen-assamese-classics',
+    name: 'Zubeen Garg: Evergreen Assamese',
+    description: 'Timeless Assamese masterpieces that shaped generations of music in Assam',
+    tag: 'Assamese Classics',
     tracks: [
-      { id: 'pb-1', title: 'Golden Hour Monologue', artist: 'Swaralipi Archives', film: 'Panbazar Memories', year: 1994, duration: 194, videoId: 'jfKfPfyJRdk' },
-      { id: 'pb-2', title: 'Brahmaputra Breeze', artist: 'Acoustic Assam', film: 'Riverbank Tapes', year: 1997, duration: 215, videoId: '5qap5aO4i9A' },
-      { id: 'pb-3', title: 'Vintage Scooter Ride', artist: 'Retro Rhythms', film: 'Guwahati-1', year: 1992, duration: 180, videoId: 'DWcJFNfaw9c' },
-      { id: 'pb-4', title: 'Sunset at Dighalipukhuri', artist: 'Lakeside Strings', film: 'Old Town Echoes', year: 1999, duration: 240, videoId: 'WPni755-Krg' },
+      { id: 'zg-a1', title: 'Mayabini Ratir Bukut', artist: 'Zubeen Garg', film: 'Daag', year: 2000, duration: 320, videoId: 'vC5gV7u9W_s' },
+      { id: 'zg-a2', title: 'Monor Nijanot', artist: 'Zubeen Garg', film: 'Anamika', year: 1992, duration: 285, videoId: 'C7D2cZ_gZgI' },
+      { id: 'zg-a3', title: 'Pakhi Pakhi Aei Mon', artist: 'Zubeen Garg', film: 'Pakhi', year: 2000, duration: 290, videoId: 'K3gD1i_GvjU' },
+      { id: 'zg-a4', title: 'Kuwasun Ebar Bhal Pao Buli', artist: 'Zubeen Garg', film: 'Maya', year: 1994, duration: 310, videoId: 'hY3N0sU2GZg' },
+      { id: 'zg-a5', title: 'Mayabini (Classic)', artist: 'Zubeen Garg', film: 'Saregama Evergreen', year: 2001, duration: 305, videoId: 'S3Uo_gP5Z0g' },
     ],
   },
   {
-    id: 'monsoon-melodies',
-    name: 'Monsoon Melodies',
-    description: 'Raindrops on tin roofs, warm chai, and sweet vintage melodies',
-    tag: 'Rain & Romance',
+    id: 'zubeen-bollywood-hits',
+    name: 'Zubeen Garg: Bollywood Blockbusters',
+    description: 'Iconic Bollywood chartbusters sung by the musical voice of the Northeast',
+    tag: 'Bollywood Hits',
     tracks: [
-      { id: 'mm-1', title: 'Rain Over Tin Roofs', artist: 'Monsoon Collective', film: 'Guwahati Rains', year: 1996, duration: 220, videoId: 'mPZkdNFkNps' },
-      { id: 'mm-2', title: 'Chai & Old Letters', artist: 'Sangeet Bhavan Session', film: 'Cassette Tapes Vol. 2', year: 1995, duration: 175, videoId: 'lTRiuFIWV54' },
-      { id: 'mm-3', title: 'Whispering Palms', artist: 'Hills & Valleys', film: 'Monsoon Diary', year: 1998, duration: 205, videoId: 'rUxyKA_-grg' },
+      { id: 'zg-b1', title: 'Ya Ali', artist: 'Zubeen Garg', film: 'Gangster', year: 2006, duration: 295, videoId: 'kYJ5oV4YfWc' },
+      { id: 'zg-b2', title: 'Dil Tu Hi Bataa', artist: 'Zubeen Garg & Alisha Chinai', film: 'Krrish 3', year: 2013, duration: 390, videoId: 'wN4K2K20o5g' },
+      { id: 'zg-b3', title: 'Jaane Kya Chaahe Mann Baawra', artist: 'Zubeen Garg', film: 'Pyaar Ke Side Effects', year: 2006, duration: 260, videoId: '1ZS901FT0Js' },
+      { id: 'zg-b4', title: 'Subah Subah', artist: 'Zubeen Garg & Shaan', film: 'I See You', year: 2006, duration: 275, videoId: 'Blx4MwYVvzc' },
     ],
   },
   {
-    id: 'late-night-adda',
-    name: 'Late Night Adda',
-    description: 'Mellow nighttime lo-fi, tranquil vinyl crackles, and timeless peace',
-    tag: 'Midnight Chill',
+    id: 'zubeen-late-night-adda',
+    name: 'Zubeen Garg: Late Night Adda',
+    description: 'Deep cuts, soulful night tunes, and golden hour melodies for quiet reflection',
+    tag: 'Midnight Soul',
     tracks: [
-      { id: 'ln-1', title: 'Midnight at Panbazar Point', artist: 'Night Owl Trio', film: 'After Hours', year: 2001, duration: 210, videoId: '21qNxnCS8WU' },
-      { id: 'ln-2', title: 'Streetlight Serenade', artist: 'Corner Shop Duo', film: 'Night Tape 04', year: 1993, duration: 190, videoId: 'kgx4WGK0oNU' },
-      { id: 'ln-3', title: 'Stars Over Nilachal', artist: 'Assam Acoustic Lab', film: 'Hilltop Reverie', year: 1999, duration: 235, videoId: '7NOSDKb0HlU' },
+      { id: 'zg-l1', title: 'Monor Nijanot (Lofi Mood)', artist: 'Zubeen Garg', film: 'Anamika Tape', year: 1992, duration: 260, videoId: 'G5D9G6d5qXw' },
+      { id: 'zg-l2', title: 'Ya Ali (Rock/Trending Edit)', artist: 'Zubeen Garg', film: 'Gangster Unplugged', year: 2006, duration: 280, videoId: '4y-N0T_p-Q0' },
+      { id: 'zg-l3', title: 'Mayabini (Tribute Session)', artist: 'Zubeen Garg', film: 'Sangeet Bhavan Archives', year: 2002, duration: 315, videoId: 'T_5P_q5zY5Y' },
+      { id: 'zg-l4', title: 'Ya Ali (Official Video)', artist: 'Zubeen Garg', film: 'Vishesh Films', year: 2006, duration: 290, videoId: 'J_b53V2T7sA' },
     ],
   },
 ];
