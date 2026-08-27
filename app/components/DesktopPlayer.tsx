@@ -20,8 +20,6 @@ interface DesktopPlayerProps {
   onPrev: () => void;
   onNext: () => void;
   onSeek: (seconds: number) => void;
-  onToggleVideoModal?: () => void;
-  isVideoVisible?: boolean;
 }
 
 export function DesktopPlayer({
@@ -33,23 +31,12 @@ export function DesktopPlayer({
   onPrev,
   onNext,
   onSeek,
-  onToggleVideoModal,
-  isVideoVisible,
 }: DesktopPlayerProps) {
   return (
-    <div className="hidden sm:flex items-center gap-4.5 rounded-full p-3 pr-5 glass-panel select-none transition-all duration-300 hover:border-white/20 w-full max-w-xl">
+    <div className="hidden sm:flex items-center gap-4.5 rounded-full p-3 pr-5 glass-panel select-none transition-all duration-300 hover:border-white/20 w-full max-w-xl shadow-2xl">
       {/* 1. Spinning Vinyl: 80px */}
-      <div className="relative group flex-shrink-0 cursor-pointer" onClick={onToggleVideoModal} title="Click to view video/cassette artwork">
+      <div className="relative flex-shrink-0 cursor-pointer" onClick={onTogglePlay} title="Click to Play / Pause">
         <VinylDisc isPlaying={isPlaying} size="desktop" title={currentTrack.title} />
-        {/* Subtle Video slot icon badge on hover */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
-            <line x1="7" y1="2" x2="7" y2="22" />
-            <line x1="17" y1="2" x2="17" y2="22" />
-            <line x1="2" y1="12" x2="22" y2="12" />
-          </svg>
-        </div>
       </div>
 
       {/* 2. Middle Column: Title/Artist + Seek bar + Elapsed/Duration */}

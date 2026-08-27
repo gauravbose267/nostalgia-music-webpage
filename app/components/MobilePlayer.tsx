@@ -20,7 +20,6 @@ interface MobilePlayerProps {
   onPrev: () => void;
   onNext: () => void;
   onSeek: (seconds: number) => void;
-  onToggleVideoModal?: () => void;
 }
 
 export function MobilePlayer({
@@ -32,13 +31,12 @@ export function MobilePlayer({
   onPrev,
   onNext,
   onSeek,
-  onToggleVideoModal,
 }: MobilePlayerProps) {
   return (
     <div className="sm:hidden flex flex-col gap-3 rounded-[26px] p-4 glass-panel select-none w-full max-w-sm mx-auto shadow-2xl">
       {/* Row 1: 64px vinyl + title/artist */}
       <div className="flex items-center gap-3.5 min-w-0">
-        <div className="cursor-pointer flex-shrink-0" onClick={onToggleVideoModal}>
+        <div className="cursor-pointer flex-shrink-0" onClick={onTogglePlay} title="Click to Play / Pause">
           <VinylDisc isPlaying={isPlaying} size="mobile" title={currentTrack.title} />
         </div>
         <div className="flex flex-col min-w-0 justify-center">
@@ -122,20 +120,7 @@ export function MobilePlayer({
           </button>
         </div>
 
-        {/* Video / Artwork Modal Toggle button on right */}
-        <div className="min-w-[50px] flex justify-end">
-          <button
-            onClick={onToggleVideoModal}
-            className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-white/60 hover:text-white hover:bg-white/10 active:scale-95 cursor-pointer"
-            aria-label="Toggle Video Player View"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-              <line x1="8" y1="21" x2="16" y2="21" />
-              <line x1="12" y1="17" x2="12" y2="21" />
-            </svg>
-          </button>
-        </div>
+        <div className="min-w-[50px]"></div>
       </div>
     </div>
   );

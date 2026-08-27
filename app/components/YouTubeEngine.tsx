@@ -32,22 +32,22 @@ export const YouTubeEngine = forwardRef<YouTubeEngineHandle, YouTubeEngineProps>
     ref
   ) {
     const playerRef = useRef<any>(null);
-    const containerId = useRef(`yt-player-${Math.random().toString(36).substring(2, 9)}`);
+    const containerId = useRef('yt-audio-player-host');
     const [isApiReady, setIsApiReady] = useState(false);
-    const [hasLoadedPlayer, setHasLoadedPlayer] = useState(false);
+    const pendingPlayRef = useRef(false);
     const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Stop progress tracking timer
-    const stopProgressTracking = useCallback(() => {
+    // Stop progress timer
+    const stopProgress = useCallback(() => {
       if (progressIntervalRef.current) {
         clearInterval(progressIntervalRef.current);
         progressIntervalRef.current = null;
       }
     }, []);
 
-    // Start progress tracking timer
-    const startProgressTracking = useCallback(() => {
-      stopProgressTracking();
+    // Start progress timer
+    const startProgress = useCallback(() => {
+      stopProgress();
       progressIntervalRef.current = setInterval(() => {
         if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
           try {
@@ -55,31 +55,33 @@ export const YouTubeEngine = forwardRef<YouTubeEngineHandle, YouTubeEngineProps>
             const dur = playerRef.current.getDuration() || currentTrack.duration || 0;
             onTimeUpdate(current, dur);
           } catch {
-            // Ignore cross-frame issues
+            // Ignore
           }
         }
       }, 250);
-    }, [currentTrack.duration, onTimeUpdate, stopProgressTracking]);
+    }, [currentTrack.duration, onTimeUpdate, stopProgress]);
 
-    // Expose control handles to parent
+    // Handle methods for parent
     useImperativeHandle(
       ref,
       () => ({
         play: () => {
+          pendingPlayRef.current = true;
           if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
             try {
               playerRef.current.playVideo();
             } catch (err) {
-              console.error('Error playing video:', err);
+              console.warn('Play error:', err);
             }
           }
         },
         pause: () => {
+          pendingPlayRef.current = false;
           if (playerRef.current && typeof playerRef.current.pauseVideo === 'function') {
             try {
               playerRef.current.pauseVideo();
             } catch (err) {
-              console.error('Error pausing video:', err);
+              console.warn('Pause error:', err);
             }
           }
         },
@@ -89,7 +91,7 @@ export const YouTubeEngine = forwardRef<YouTubeEngineHandle, YouTubeEngineProps>
               playerRef.current.seekTo(seconds, true);
               onTimeUpdate(seconds, currentTrack.duration);
             } catch (err) {
-              console.error('Error seeking video:', err);
+              console.warn('Seek error:', err);
             }
           }
         },
@@ -98,7 +100,7 @@ export const YouTubeEngine = forwardRef<YouTubeEngineHandle, YouTubeEngineProps>
             try {
               playerRef.current.setVolume(Math.min(100, Math.max(0, volume)));
             } catch (err) {
-              console.error('Error setting volume:', err);
+              console.warn('Volume error:', err);
             }
           }
         },
@@ -106,7 +108,7 @@ export const YouTubeEngine = forwardRef<YouTubeEngineHandle, YouTubeEngineProps>
       [currentTrack.duration, onTimeUpdate]
     );
 
-    // 1. Load YouTube IFrame API script
+    // 1. Load YouTube IFrame API Script
     useEffect(() => {
       if (typeof window === 'undefined') return;
 
@@ -138,60 +140,58 @@ export const YouTubeEngine = forwardRef<YouTubeEngineHandle, YouTubeEngineProps>
       const element = document.getElementById(containerId.current);
       if (!element) return;
 
-      // If player already exists, load new video
       if (playerRef.current && typeof playerRef.current.loadVideoById === 'function') {
         try {
           playerRef.current.loadVideoById({
             videoId: currentTrack.videoId,
             startSeconds: 0,
           });
-          if (isPlaying) {
+          if (isPlaying || pendingPlayRef.current) {
             playerRef.current.playVideo();
           }
         } catch (err) {
-          console.warn('Could not reload video ID:', err);
+          console.warn('Error loading video by ID:', err);
         }
         return;
       }
 
-      // Create new player
       playerRef.current = new window.YT.Player(containerId.current, {
+        height: '160',
+        width: '240',
         videoId: currentTrack.videoId,
         playerVars: {
           autoplay: isPlaying ? 1 : 0,
-          controls: 1,
+          controls: 0,
           rel: 0,
           modestbranding: 1,
           playsinline: 1,
           enablejsapi: 1,
-          fs: 1,
+          origin: window.location.origin,
         },
         events: {
           onReady: (event: any) => {
-            setHasLoadedPlayer(true);
-            if (isPlaying) {
+            if (isPlaying || pendingPlayRef.current) {
               try {
                 event.target.playVideo();
               } catch (e) {
-                console.warn('Autoplay blocked before interaction:', e);
+                console.warn('Playback gesture required:', e);
               }
             }
           },
           onStateChange: (event: any) => {
-            // YT.PlayerState: UNSTARTED (-1), ENDED (0), PLAYING (1), PAUSED (2), BUFFERING (3), CUED (5)
             const state = event.data;
             if (state === 1) {
               // PLAYING
               onStateChange('PLAYING');
-              startProgressTracking();
+              startProgress();
             } else if (state === 2) {
               // PAUSED
               onStateChange('PAUSED');
-              stopProgressTracking();
+              stopProgress();
             } else if (state === 0) {
               // ENDED
               onStateChange('ENDED');
-              stopProgressTracking();
+              stopProgress();
               onTrackEnded();
             } else if (state === 3) {
               // BUFFERING
@@ -200,15 +200,15 @@ export const YouTubeEngine = forwardRef<YouTubeEngineHandle, YouTubeEngineProps>
           },
           onError: (event: any) => {
             const errorCode = event.data;
-            console.error(`YouTube Player Error ${errorCode} on videoId ${currentTrack.videoId}`);
-            stopProgressTracking();
+            console.error(`[YouTube Error] Code: ${errorCode} on videoId: ${currentTrack.videoId}`);
+            stopProgress();
             onTrackError(errorCode, currentTrack.videoId);
           },
         },
       });
 
       return () => {
-        stopProgressTracking();
+        stopProgress();
       };
     }, [
       isApiReady,
@@ -216,11 +216,11 @@ export const YouTubeEngine = forwardRef<YouTubeEngineHandle, YouTubeEngineProps>
       onStateChange,
       onTrackEnded,
       onTrackError,
-      startProgressTracking,
-      stopProgressTracking,
+      startProgress,
+      stopProgress,
     ]);
 
-    // Handle isPlaying changes
+    // Handle isPlaying prop updates
     useEffect(() => {
       if (!playerRef.current) return;
       try {
@@ -230,19 +230,13 @@ export const YouTubeEngine = forwardRef<YouTubeEngineHandle, YouTubeEngineProps>
           playerRef.current.pauseVideo();
         }
       } catch {
-        // Player state change fallback
+        // Fallback
       }
     }, [isPlaying]);
 
     return (
-      <div className="w-full flex flex-col items-center">
-        {/* Visible YouTube Video Container - fully compliant with YouTube developer terms */}
-        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black/90 border border-white/10 shadow-2xl">
-          <div id={containerId.current} className="w-full h-full" />
-          
-          {/* Subtle vintage CRT scanline overlay effect */}
-          <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/[0.03] to-transparent opacity-40 mix-blend-overlay"></div>
-        </div>
+      <div className="fixed -bottom-96 -left-96 w-48 h-32 opacity-0 pointer-events-none overflow-hidden -z-50">
+        <div id={containerId.current} />
       </div>
     );
   }
