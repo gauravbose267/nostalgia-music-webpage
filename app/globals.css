@@ -1,0 +1,81 @@
+﻿@import "tailwindcss";
+
+@theme {
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --color-accent: #f59e0b;
+  --color-accent-light: #fbbf24;
+  --color-accent-dark: #d97706;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hero-bg {
+  background-image: url('/bg/scene-wide.png');
+}
+
+@media (orientation: portrait) {
+  .hero-bg {
+    background-image: url('/bg/scene-tall.png');
+  }
+}
+
+.grain-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.3;
+}
+
+.glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.055));
+  backdrop-filter: blur(64px) saturate(1.7);
+  -webkit-backdrop-filter: blur(64px) saturate(1.7);
+  box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
+}
+
+.animate-colon-blink {
+  animation: blink 1s step-start infinite;
+}
+
+/* Safe area padding utilities */
+.safe-top {
+  top: max(1rem, env(safe-area-inset-top));
+}
+.safe-bottom {
+  bottom: max(1rem, env(safe-area-inset-bottom));
+}
+.safe-left {
+  left: max(1rem, env(safe-area-inset-left));
+}
+.safe-right {
+  right: max(1rem, env(safe-area-inset-right));
+}
+.safe-p-top {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+.safe-p-bottom {
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+}
+.safe-p-left {
+  padding-left: max(1rem, env(safe-area-inset-left));
+}
+.safe-p-right {
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
